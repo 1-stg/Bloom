@@ -950,6 +950,8 @@ h6 {
 
 @media (max-width: 1024px) {
   body {
+    background-image: none;
+    background-color: #fef9f5;
     overflow-x: hidden;
   }
 
