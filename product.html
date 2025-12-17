@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bloom - Букет "Искренний восторг"</title>
+    <link rel="stylesheet" href="web/css/styles.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="web/js/modalSearch.js" defer></script>
+    <script src="web/js/modalAuthReg.js" defer></script>
+    <style>
+        .product-page {
+            padding: 40px 0 100px;
+            min-height: calc(100vh - 400px);
+        }
+
+        .product-card-wrapper {
+            background: white;
+            border: 2px solid #dadada;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 60px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .product-main {
+            margin-bottom: 0;
+        }
+
+        .product-slider-container {
+            position: relative;
+        }
+
+        .product-slider {
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .carousel-item img {
+            width: 100%;
+
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 187, 127, 0.8);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.8;
+        }
+
+        .carousel-control-prev:hover,
+        .carousel-control-next:hover {
+            background: rgba(255, 187, 127, 1);
+            opacity: 1;
+        }
+
+        .carousel-control-prev {
+            left: 15px;
+        }
+
+        .carousel-control-next {
+            right: 15px;
+        }
+
+        .thumbnails-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #f3fae1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: #ffbb7f;
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding-left: 40px;
+        }
+
+        .product-title {
+            font-family: "Lora";
+            font-size: 35px;
+            color: #354809;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            font-weight: 400;
+        }
+
+        .product-price {
+            font-family: "Lora";
+            font-size: 32px;
+            color: #ffbb7f;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .product-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .info-button {
+            padding: 12px 30px;
+            border: 2px solid #ffbb7f;
+            background: white;
+            border-radius: 12px;
+            font-family: "Lora";
+            font-size: 18px;
+            color: #ffbb7f;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .info-button.active {
+            background: #ffbb7f;
+            color: white;
+        }
+
+        .info-button:hover {
+            background: #ffbb7f;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .product-description {
+
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            min-height: 200px;
+            border: 1px solid #f3fae1;
+        }
+
+        .info-content {
+            font-family: "Bitter-Regular";
+            font-size: 18px;
+            color: #666;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .info-content.active {
+            display: block;
+        }
+
+        .product-specs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .spec-item {
+            background: white;
+            border: 2px solid #f3fae1;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .spec-label {
+            font-family: "Bitter-Regular";
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .spec-value {
+            font-family: "Lora";
+            font-size: 20px;
+            color: #354809;
+        }
+
+        .product-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: white;
+            border: 2px solid #f3fae1;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #ffbb7f;
+            background: white;
+            color: #ffbb7f;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quantity-btn:hover {
+            background: #ffbb7f;
+            color: white;
+        }
+
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            font-family: "Lora";
+            font-size: 20px;
+            border: 2px solid #f3fae1;
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .add-to-cart-btn {
+            background: #afbe8d;
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 15px;
+            font-family: "Lora";
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #8fa569;
+            transform: translateY(-2px);
+        }
+
+        .related-products {
+            margin-top: 40px;
+        }
+
+        .related-title {
+            font-family: "Lora";
+            font-size: 32px;
+            color: #354809;
+
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .product-card {
+            background: white;
+            border: 2.5px solid #dadada;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s ease;
+            height: auto;
+            min-height: 500px;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-color: #7a865a;
+        }
+
+        .product-card__image {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            object-position: center;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .product-card__content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card__name {
+            font-family: "Bitter-Regular";
+            font-size: 24px;
+            font-weight: 500;
+            text-align: center;
+            color: #2d2d2d;
+            margin: 0;
+            line-height: 1.3;
+            min-height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-card__footer {
+            display: flex;
+            align-items: center;
+            background: #f8f8f8;
+            border: 2px solid #7a865a;
+            border-radius: 20px;
+            margin-top: auto;
+            min-height: 70px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card__price {
+            font-family: "Lora";
+            font-size: 22px;
+            color: #354809;
+            padding: 0 20px;
+            flex-grow: 1;
+            font-weight: 600;
+        }
+
+        .product-card__button {
+            background: #babe8d;
+            border: none;
+            border-left: 2px solid #4d5047;
+            border-radius: 0 18px 18px 0;
+            width: 70px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .product-card__button:hover {
+            background: #9fa77a;
+            width: 75px;
+        }
+
+        .product-card__button img {
+            width: 30px;
+            height: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card__button:hover img {
+            transform: scale(1.2);
+        }
+
+        .product-card__link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 70px);
+            z-index: 1;
+        }
+
+        .product-card__link:hover {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        @media (max-width: 992px) {
+            .product-card-wrapper {
+                padding: 20px;
+            }
+
+            .product-info {
+                padding-left: 0;
+                margin-top: 40px;
+            }
+
+            .carousel-item img {
+                height: 350px;
+            }
+
+            .product-title {
+                font-size: 36px;
+            }
+
+            .product-price {
+                font-size: 32px;
+            }
+
+            .product-buttons {
+                flex-direction: column;
+            }
+
+            .info-button {
+                width: 100%;
+            }
+
+            .product-specs {
+                grid-template-columns: 1fr;
+            }
+
+            .product-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .add-to-cart-btn {
+                margin-left: 0;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .product-page {
+                padding: 20px 0 60px;
+            }
+
+            .carousel-item img {
+                height: 300px;
+            }
+
+            .thumbnail {
+                width: 60px;
+                height: 60px;
+            }
+
+            .product-title {
+                font-size: 32px;
+            }
+
+            .product-price {
+                font-size: 28px;
+            }
+
+            .info-content {
+                font-size: 16px;
+            }
+
+            .related-title {
+                font-size: 28px;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-card-wrapper {
+                padding: 15px;
+            }
+
+            .carousel-item img {
+                height: 250px;
+            }
+
+            .carousel-control-prev,
+            .carousel-control-next {
+                width: 40px;
+                height: 40px;
+            }
+
+            .thumbnail {
+                width: 50px;
+                height: 50px;
+            }
+
+            .product-title {
+                font-size: 28px;
+            }
+
+            .product-price {
+                font-size: 24px;
+            }
+
+            .info-button {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+
+            .add-to-cart-btn {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-card {
+                min-height: 450px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <img class="logo" src="web/images/icons/logo.svg" alt="Логотип Bloom" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="about.html">О НАС</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="categories.html">КАТАЛОГ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link search-link" href="#" data-bs-toggle="modal"
+                                data-bs-target="#searchModal">
+                                ПОИСК
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="nav-icons d-flex">
+                        <a class="nav-icon me-3" href="#" data-bs-toggle="modal" data-bs-target="#profileModal">
+                            <img src="web/images/icons/profile.svg" alt="Профиль" />
+                        </a>
+                        <a class="nav-icon" href="cart.html">
+                            <img src="web/images/icons/cart.svg" alt="Корзина товаров" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="product-page">
+        <div class="container">
+            <div class="product-card-wrapper">
+                <div class="row product-main">
+                    <div class="col-lg-6">
+                        <div class="product-slider-container">
+                            <div id="productCarousel" class="carousel slide product-slider" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active">
+                                        <img src="web\images\photos\flowers_iskreni_vostorg.png" class="d-block w-100"
+                                            alt="Букет Искренний восторг - вид 1">
+                                    </div>
+                                    <div class="carousel-item">
+                                        <img src="web\images\photos\flowers_iskreni_vostorg.png" class="d-block w-100"
+                                            alt="Букет Искренний восторг - вид 2">
+                                    </div>
+                                    <div class="carousel-item">
+                                        <img src="web\images\photos\flowers_iskreni_vostorg.png" class="d-block w-100"
+                                            alt="Букет Искренний восторг - вид 3">
+                                    </div>
+                                    <div class="carousel-item">
+                                        <img src="web\images\photos\flowers_iskreni_vostorg.png" class="d-block w-100"
+                                            alt="Букет Искренний восторг - вид 4">
+                                    </div>
+                                    <div class="carousel-item">
+                                        <img src="web\images\photos\flowers_iskreni_vostorg.png" class="d-block w-100"
+                                            alt="Букет Искренний восторг - вид 5">
+                                    </div>
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel"
+                                    data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Предыдущий</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel"
+                                    data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Следующий</span>
+                                </button>
+                            </div>
+                            <div class="thumbnails-container">
+                                <img src="web\images\photos\flowers_iskreni_vostorg.png" class="thumbnail active"
+                                    data-bs-target="#productCarousel" data-bs-slide-to="0" alt="Миниатюра 1">
+                                <img src="web\images\photos\flowers_iskreni_vostorg.png" class="thumbnail"
+                                    data-bs-target="#productCarousel" data-bs-slide-to="1" alt="Миниатюра 2">
+                                <img src="web\images\photos\flowers_iskreni_vostorg.png" class="thumbnail"
+                                    data-bs-target="#productCarousel" data-bs-slide-to="2" alt="Миниатюра 3">
+                                <img src="web\images\photos\flowers_iskreni_vostorg.png" class="thumbnail"
+                                    data-bs-target="#productCarousel" data-bs-slide-to="3" alt="Миниатюра 4">
+                                <img src="web\images\photos\flowers_iskreni_vostorg.png" class="thumbnail"
+                                    data-bs-target="#productCarousel" data-bs-slide-to="4" alt="Миниатюра 5">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="product-info">
+                            <h1 class="product-title">Искренний восторг</h1>
+
+                            <div class="product-price">10 000 ₽</div>
+                            <div class="product-buttons">
+                                <button class="info-button active" data-target="description">Описание</button>
+                                <button class="info-button" data-target="composition">Наполнение</button>
+                            </div>
+                            <div class="product-description">
+                                <div class="info-content active" id="description-content">
+                                    <p>Искренний восторг — это роскошный букет, созданный для самых особенных моментов в
+                                        жизни.
+                                        Его название говорит само за себя: этот букет способен вызвать искренние эмоции
+                                        и стать
+                                        прекрасным подарком на день рождения, юбилей, годовщину или просто в знак любви
+                                        и признательности.</p>
+
+                                    <p>Букет собран вручную опытными флористами с использованием только свежайших
+                                        цветов.
+                                        Идеально подходит для торжественных случаев и станет ярким акцентом любого
+                                        праздника.</p>
+                                </div>
+
+                                <div class="info-content" id="composition-content">
+                                    <p><strong>Состав букета:</strong></p>
+                                    <ul>
+                                        <li>Красные розы сорта "Гран-При" — 15 штук</li>
+                                        <li>Белые альстромерии — 7 штук</li>
+                                        <li>Зелень рускус — 5 веточек</li>
+                                        <li>Зелень салал — 3 веточки</li>
+                                        <li>Декоративная упаковка из крафтовой бумаги</li>
+                                        <li>Атласная лента золотого цвета</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="product-specs">
+                                <div class="spec-item">
+                                    <span class="spec-label">Ширина</span>
+                                    <span class="spec-value">40 см</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Высота</span>
+                                    <span class="spec-value">50 см</span>
+                                </div>
+                            </div>
+
+                            <div class="product-actions">
+                                <div class="quantity-control">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="text" class="quantity-input" value="1" readonly>
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+
+                                <button class="add-to-cart-btn" id="addToCartBtn">
+                                    Добавить в корзину
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="related-products">
+                <h2 class="related-title">С этим товаром покупают</h2>
+
+                <div class="products-grid">
+                    <div class="product">
+                        <a href="product.html" class="product__link"></a>
+                        <img class="product__image" src="web\images\photos\flowers_iskreni_vostorg.png"
+                            alt="Букет Искренний восторг" />
+                        <div class="product__content">
+                            <div class="product__name">Искренний восторг</div>
+                            <div class="product__footer">
+                                <div class="product__price">10000₽</div>
+                                <button class="product__button" onclick="addToCart(event, 'Искренний восторг', 10000)">
+                                    <img src="web\images\icons\basket.png" alt="Добавить в корзину" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product">
+                        <a href="product.html" class="product__link"></a>
+                        <img class="product__image" src="web\images\photos\flowers_iskreni_vostorg.png"
+                            alt="Букет Искренний восторг" />
+                        <div class="product__content">
+                            <div class="product__name">Искренний восторг</div>
+                            <div class="product__footer">
+                                <div class="product__price">10000₽</div>
+                                <button class="product__button" onclick="addToCart(event, 'Искренний восторг', 10000)">
+                                    <img src="web\images\icons\basket.png" alt="Добавить в корзину" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product">
+                        <a href="product.html" class="product__link"></a>
+                        <img class="product__image" src="web\images\photos\flowers_iskreni_vostorg.png"
+                            alt="Букет Искренний восторг" />
+                        <div class="product__content">
+                            <div class="product__name">Искренний восторг</div>
+                            <div class="product__footer">
+                                <div class="product__price">10000₽</div>
+                                <button class="product__button" onclick="addToCart(event, 'Искренний восторг', 10000)">
+                                    <img src="web\images\icons\basket.png" alt="Добавить в корзину" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__top">
+                <div class="footer__left">
+                    <p class="footer__phone">+7 929 104 86 41 ⚘</p>
+                    <div class="social">
+                        <img class="social__icon" src="web/images/icons/vk.svg" alt="Логотип ВК" />
+                        <img class="social__icon" src="web/images/icons/telegram.svg" alt="Логотип Телеграм" />
+                    </div>
+                </div>
+                <div class="footer__center">
+                    <img class="footer__logo" src="web/images/icons/footer_logo.svg" alt="Логотип Bloom" />
+                </div>
+            </div>
+            <div class="footer__line"></div>
+            <div class="footer__bottom">
+                <p class="footer__year">2025</p>
+                <p class="footer__copyright">&copy; Все права защищены</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const infoButtons = document.querySelectorAll('.info-button');
+            const infoContents = document.querySelectorAll('.info-content');
+
+            infoButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const targetId = this.getAttribute('data-target');
+                    infoButtons.forEach(btn => btn.classList.remove('active'));
+                    infoContents.forEach(content => content.classList.remove('active'));
+                    this.classList.add('active');
+                    document.getElementById(targetId + '-content').classList.add('active');
+                });
+            });
+
+            const quantityInput = document.querySelector('.quantity-input');
+            const minusBtn = document.querySelector('.quantity-btn.minus');
+            const plusBtn = document.querySelector('.quantity-btn.plus');
+
+            minusBtn.addEventListener('click', function () {
+                let value = parseInt(quantityInput.value);
+                if (value > 1) {
+                    quantityInput.value = value - 1;
+                }
+            });
+
+            plusBtn.addEventListener('click', function () {
+                let value = parseInt(quantityInput.value);
+                if (value < 99) {
+                    quantityInput.value = value + 1;
+                }
+            });
+
+            const addToCartBtn = document.getElementById('addToCartBtn');
+            addToCartBtn.addEventListener('click', function () {
+                const productName = document.querySelector('.product-title').textContent;
+                const productPrice = document.querySelector('.product-price').textContent;
+                const quantity = quantityInput.value;
+                const originalText = this.innerHTML;
+                this.innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 16L13 11L12 10L8 14L6 12L5 13L8 16Z" fill="white"/></svg>Добавлено!';
+                this.style.backgroundColor = '#afbe8d';
+
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    this.style.backgroundColor = '';
+                }, 2000);
+
+                alert(`Товар "${productName}" добавлен в корзину!\nКоличество: ${quantity} шт\nСумма: ${productPrice}`);
+            });
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            const carousel = document.getElementById('productCarousel');
+            const bsCarousel = new bootstrap.Carousel(carousel);
+
+            thumbnails.forEach((thumbnail, index) => {
+                thumbnail.addEventListener('click', function () {
+                    thumbnails.forEach(thumb => thumb.classList.remove('active'));
+                    this.classList.add('active');
+                    bsCarousel.to(index);
+                });
+            });
+
+            carousel.addEventListener('slid.bs.carousel', function (event) {
+                const activeIndex = event.to;
+                thumbnails.forEach(thumb => thumb.classList.remove('active'));
+                if (thumbnails[activeIndex]) {
+                    thumbnails[activeIndex].classList.add('active');
+                }
+            });
+            const productButtons = document.querySelectorAll('.product-card__button');
+            productButtons.forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    const productCard = this.closest('.product-card');
+                    const productName = productCard.querySelector('.product-card__name').textContent;
+                    const productPrice = productCard.querySelector('.product-card__price').textContent;
+                    alert(`Товар "${productName}" добавлен в корзину!\nЦена: ${productPrice}`);
+                });
+            });
+            const productLinks = document.querySelectorAll('.product-card__link');
+            productLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    if (e.target.closest('.product-card__button')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
